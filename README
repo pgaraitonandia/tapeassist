@@ -1,0 +1,44 @@
+# Fri Aug 23 2013
+# Written by Pablo Garaitonandia for Penn State University.
+# This program will minimize the amount of files needed to 
+# back up to tape for the zimbra back ups. Directories with 
+# the zimbraID of each user will be put in a tar archive.
+# This will reduce the amount of files to back up, should
+# you chose to delete the directories after they have been
+# archived 
+#
+DISCLAIMER
+This script was written on:
+Linux tcs9.aittest.psu.edu 2.6.32-358.el6.x86_64 #1 SMP Tue Jan 29 11:47:41 EST 2013 x86_64 x86_64 x86_64 GNU/Linux
+with
+perl v5.10.1 (*) built for x86_64-linux-thread-multi
+
+Please test in a non-production environment before implementing
+
+ 
+INSTALLATION
+
+1) Put the following line in your (r)syslog.conf and restart (r)syslog.
+
+local2.*                -/var/log/tapeassist.log
+
+2) Create a config file with the following parameters set
+
+# CONFIG FILE PARAMS
+BASEDIR=/opt/zimbra/backup	Base directory of zimbra backups.
+COMPRESS=YES or NO		Compress the user directories (tar vs tgz) .
+DELETE=YES or NO		Delete ZimbraID directories after being archived.
+
+3) Add the zimbra user to the lock group in /etc/group
+
+4) Add the following line to the list of files in /etc/logrotate.d/syslog
+
+/var/log/tapeassist.log
+
+5) Put the script in the zimbra crontab to execute when you like or execute 
+by hand.
+
+00 6,23 * * * /usr/local/bin/tape_assist.pl -f /etc/tapeassist/tapeassist.cfg > /dev/null 2>&1
+
+
+#
